@@ -25,6 +25,17 @@ install(EXPORT hnswlibTargets
     NAMESPACE hnswlib::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/hnswlib)
 
+include (ExternalProject)
+include(extern/hdf5/hdf5.cmake)
+include(extern/spdlog/spdlog.cmake)
+include(extern/yaml-cpp/yaml-cpp.cmake)
+include(extern/argparse/argparse.cmake)
+include(extern/json/json.cmake)
+include(extern/tabulate/tabulate.cmake)
+include_directories (${CMAKE_CURRENT_BINARY_DIR}/spdlog/install/include)
+
+add_subdirectory (bench)
+
 # Examples and tests
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     option(HNSWLIB_EXAMPLES "Build examples and tests." ON)
