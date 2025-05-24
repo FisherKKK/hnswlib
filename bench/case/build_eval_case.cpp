@@ -48,7 +48,9 @@ BuildEvalCase::init_monitors() {
 JsonType
 BuildEvalCase::Run() {
     this->do_build();
+    std::cout << "Index built succeed" << std::endl;
     this->serialize();
+    std::cout << "Index serialized" << std::endl;
     auto result = this->process_result();
     return result;
 }
@@ -68,9 +70,11 @@ BuildEvalCase::do_build() {
     omp_set_num_threads(this->config_.num_threads_building);
     std::cout << "Using " << this->config_.num_threads_building << " threads build HNSW" << std::endl;
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int64_t i = 0; i < total_base; ++i) {
         index_->addPoint(base + i * dim, ids[i]);
+        if (i % (total_base / 10) == 0)
+            std::cout << "Index i: " << i << std::endl;
     }
 
 

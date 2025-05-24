@@ -22,6 +22,7 @@
 #include "./search_eval_case.h"
 
 namespace vsag::eval {
+std::shared_ptr<hnswlib::SpaceInterface<float>> global_space;
 
 namespace {
 IndexPtr CreateIndex(const std::string &index_name, const std::string &create_params) {
@@ -35,14 +36,12 @@ IndexPtr CreateIndex(const std::string &index_name, const std::string &create_pa
     auto M = index_param["M"].get<int64_t>();
     auto ef_construction = index_param["ef_construction"].get<int64_t>();
 
-    std::shared_ptr<hnswlib::SpaceInterface<float>> space;
-
     if (metric_type == "l2")
-        space = std::make_shared<hnswlib::L2Space>(dim);
+        global_space = std::make_shared<hnswlib::L2Space>(dim);
     else
         exit(1);
 
-    return std::make_shared<hnswlib::HierarchicalNSW<float>>(space.get(), max_elements, M, ef_construction);
+    return std::make_shared<hnswlib::HierarchicalNSW<float>>(global_space.get(), max_elements, M, ef_construction);
 }
 
 }

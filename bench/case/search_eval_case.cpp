@@ -27,6 +27,7 @@
 
 namespace vsag::eval {
 
+extern std::shared_ptr<hnswlib::SpaceInterface<float>> global_space;
 
 SearchEvalCase::SearchEvalCase(const std::string& dataset_path,
                                const std::string& index_path,
@@ -127,15 +128,19 @@ SearchEvalCase::Run() {
 void
 SearchEvalCase::deserialize() {
     std::ifstream infile(this->index_path_, std::ios::binary);
-    auto space = std::make_shared<hnswlib::L2Space>(this->dataset_ptr_->GetDim());
-    this->index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(space.get(), this->index_path_);
+    this->index_ = std::make_shared<hnswlib::HierarchicalNSW<float>>(global_space.get(), this->index_path_);
 }
 void
 SearchEvalCase::do_knn_search() {
     uint64_t topk = config_.top_k;
     auto query_count = this->dataset_ptr_->GetNumberOfQuery();
     auto min_query = std::max(query_count, 100'000L);
+    auto parsed_search_param = JsonType::parse(config_.search_param);
+    auto ef_search = parsed_search_param["ef_search"].get<int>();
+    dynamic_cast<hnswlib::HierarchicalNSW<float>*>(index_.get())->setEf(ef_search);
     std::cout << "Really start searching, single monitor query number: " << min_query << std::endl;
+
+
     for (auto& monitor : this->monitors_) {
         monitor->Start();
 
