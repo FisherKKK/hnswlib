@@ -3,11 +3,34 @@ cmake_minimum_required(VERSION 3.0...3.26)
 project(hnswlib
     LANGUAGES CXX)
 
+
+option (ENABLE_ALIFLASH "Whether enable aliflash" OFF)
+
+if (ENABLE_ALIFLASH)
+    add_definitions (-DUSE_ALIFLASH=1)
+    set (CMAKE_CXX_FLAGS  "-w")
+    message (STATUS "Using aliflash")
+else ()
+    add_definitions (-DUSE_ALIFLASH=0)
+    set (CMAKE_CXX_FLAGS  "-w")
+    message (STATUS "Using local ssd")
+endif ()
+
 include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 
 add_library(hnswlib INTERFACE)
 add_library(hnswlib::hnswlib ALIAS hnswlib)
+
+target_link_libraries(hnswlib -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/src/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
+        -lz
+        numa
+        dl)
+
+target_link_libraries(hnswlib::hnswlib -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/src/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
+        -lz
+        numa
+        dl)
 
 target_include_directories(hnswlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
