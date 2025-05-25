@@ -1384,6 +1384,10 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
             result.push(std::pair<dist_t, labeltype>(rez.first, getExternalLabel(rez.second)));
             top_candidates.pop();
         }
+
+#if USE_ALIFLASH == 1
+        client_->end_single(query_id)
+#endif
         return result;
     }
 
