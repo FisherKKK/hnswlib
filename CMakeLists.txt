@@ -22,15 +22,15 @@ include(CheckCXXCompilerFlag)
 add_library(hnswlib INTERFACE)
 add_library(hnswlib::hnswlib ALIAS hnswlib)
 
-target_link_libraries(hnswlib -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/src/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
+target_link_libraries(hnswlib INTERFACE -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
         -lz
         numa
         dl)
 
-target_link_libraries(hnswlib::hnswlib -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/src/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
-        -lz
-        numa
-        dl)
+#target_link_libraries(hnswlib::hnswlib -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/src/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
+#        -lz
+#        numa
+#        dl)
 
 target_include_directories(hnswlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

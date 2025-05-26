@@ -348,7 +348,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 #if USE_ALIFLASH == 1
             dist_t dist;
             float ali_dist;
-            client_->cal_single((void*)data_point, ep_id, &ali_dist, query_id);
+            labeltype label_id = getExternalLabel(ep_id);
+            client_->cal_single((void*)data_point, label_id, &ali_dist, query_id);
             dist = ali_dist;
 #else
             dist_t dist = fstdistfunc_(data_point, ep_data, dist_func_param_);
@@ -416,10 +417,11 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 #if USE_ALIFLASH == 1
                     dist_t dist;
                     float ali_dist;
-                    client_->cal_single((void*)data_point, candidate_id, &ali_dist, query_id);
+                    labeltype candidate_label_id = getExternalLabel(candidate_id);
+                    client_->cal_single((void*)data_point, candidate_label_id, &ali_dist, query_id);
                     dist = ali_dist;
-#else
                     char *currObj1 = (getDataByInternalId(candidate_id));
+#else
                     dist_t dist = fstdistfunc_(data_point, currObj1, dist_func_param_);
 #endif
 
@@ -1315,7 +1317,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 #if USE_ALIFLASH == 1
         dist_t curdist;
         float ali_dist;
-        client_->cal_single((void*)query_data, enterpoint_node_, &ali_dist, query_id);
+        labeltype label_enter = getExternalLabel(enterpoint_node_);
+        client_->cal_single((void*)query_data, label_enter, &ali_dist, query_id);
         curdist = ali_dist;
 #else
         dist_t curdist = fstdistfunc_(query_data, getDataByInternalId(enterpoint_node_), dist_func_param_);
@@ -1341,7 +1344,8 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 #if USE_ALIFLASH == 1
                     dist_t d;
                     float ali_d;
-                    client_->cal_single((void*)query_data, cand, &ali_dist, query_id);
+                    labeltype cand_label = getExternalLabel(cand);
+                    client_->cal_single((void*)query_data, cand_label, &ali_dist, query_id);
                     d = ali_d;
 #else
                     dist_t d = fstdistfunc_(query_data, getDataByInternalId(cand), dist_func_param_);
@@ -1386,7 +1390,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
         }
 
 #if USE_ALIFLASH == 1
-        client_->end_single(query_id)
+        client_->end_single(query_id);
 #endif
         return result;
     }

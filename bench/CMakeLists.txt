@@ -29,4 +29,8 @@ target_link_libraries (eval_performance
   nlohmann_json::nlohmann_json
   z
   OpenMP::OpenMP_CXX
+  -Wl,--whole-archive ${PROJECT_SOURCE_DIR}/lib/libpnm_engine_static.a  -Wl,--no-whole-archive
+  -lz
+  numa
+  dl
 )
