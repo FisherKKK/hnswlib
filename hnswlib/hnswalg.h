@@ -413,6 +413,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
 #endif
                 if (!(visited_array[candidate_id] == visited_array_tag)) {
                     visited_array[candidate_id] = visited_array_tag;
+                    char *currObj1 = (getDataByInternalId(candidate_id));
 
 #if USE_ALIFLASH == 1
                     dist_t dist;
@@ -420,7 +421,6 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
                     labeltype candidate_label_id = getExternalLabel(candidate_id);
                     client_->cal_single((void*)data_point, candidate_label_id, &ali_dist, query_id);
                     dist = ali_dist;
-                    char *currObj1 = (getDataByInternalId(candidate_id));
 #else
                     dist_t dist = fstdistfunc_(data_point, currObj1, dist_func_param_);
 #endif
