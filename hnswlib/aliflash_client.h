@@ -7,7 +7,7 @@
 #include "pnm_engine_def.h"
 #include "pnmesdk_client_c.h"
 
-// #define USE_ALIFLASH 1
+#define MULTICASE
 
 struct AliFlashClient {
 
@@ -58,18 +58,18 @@ struct AliFlashClient {
 
       vecsize_ = vecsize;
 
-      std::cout << "Upload ready, " << "vecsize: " << vecsize_
-                << ", vecdim: " << vecdim_
-                << std::endl;
+      // std::cout << "Upload ready, " << "vecsize: " << vecsize_
+      //           << ", vecdim: " << vecdim_
+      //           << std::endl;
 
       // block size
       size_t offset = BLOCK_SIZE / (vecdim_ * FP32);
-      std::cout << "Offset size: " << std::dec << offset << std::endl;
+      // std::cout << "Offset size: " << std::dec << offset << std::endl;
 
       // fold upload
       size_t i;
       for (i = 0; i + offset <= vecsize_; i += offset) {
-          std::cout << "Offset #" << i << std::endl;
+          // std::cout << "Offset #" << i << std::endl;
           ret = pnmesdk_db_storage(context_,
                                   (char*)(base_data + i * vecdim_),
                                   offset * vecdim_ * FP32);
@@ -77,7 +77,7 @@ struct AliFlashClient {
 
       // tail
       if (i < vecsize_) {
-          std::cout << "Deal with tail: " << vecsize_ - i << std::endl;
+          // std::cout << "Deal with tail: " << vecsize_ - i << std::endl;
           ret = pnmesdk_db_storage(context_, (char*)(base_data + i * vecdim_), (vecsize_ - i) * vecdim_ * FP32);
       }
 
@@ -87,7 +87,7 @@ struct AliFlashClient {
           exit(1);
       }
 
-      std::cout << "Upload succeed" << std::endl;
+      // std::cout << "Upload succeed" << std::endl;
 #ifdef MULTICASE
       init = true;
 #endif

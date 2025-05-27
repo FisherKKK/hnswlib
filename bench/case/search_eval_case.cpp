@@ -35,9 +35,9 @@ SearchEvalCase::SearchEvalCase(const std::string& dataset_path,
                                EvalConfig config)
     : EvalCase(dataset_path, index_path, index), config_(std::move(config)) {
 #if USE_ALIFLASH == 1
-    auto aliflash_client = AliFlashClient::GetInstance(dataset_ptr_->GetDim());
-    aliflash_client->open();
-    aliflash_client->upload((float*)dataset_ptr_->GetTrain(), dataset_ptr_->GetNumberOfBase());
+    // auto aliflash_client = AliFlashClient::GetInstance(dataset_ptr_->GetDim());
+    // aliflash_client->open();
+    // aliflash_client->upload((float*)dataset_ptr_->GetTrain(), dataset_ptr_->GetNumberOfBase());
 #endif
 
 
